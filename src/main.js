@@ -4,15 +4,19 @@ const { checkForUpdates } = require('./updateChecker');
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 300,
+    height: 350,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
   win.loadFile(path.join(__dirname, '../public/index.html'));
-  checkForUpdates();
+
+  checkForUpdates(win);
 }
 
 app.whenReady().then(() => {

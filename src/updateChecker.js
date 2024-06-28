@@ -9,12 +9,12 @@ const appDataPath = path.join(os.homedir(), 'AppData', 'Local', 'RessurgeLaunche
 const jarFileNamePrefix = 'Ressurge_v'; // Prefixo do nome do arquivo
 const jarFileExtension = '.ja.jar'; // Extensão do nome do arquivo
 
-async function checkForUpdates() {
+async function checkForUpdates(win) {
   try {
     const response = await axios.get('https://api.github.com/repos/ressurge/Loader/releases/latest');
     const latestVersion = response.data.tag_name; // Supondo que a tag_name seja a versão do lançamento
 
-    console.log('Dados do lançamento:', response.data);
+    win.webContents.send('update-progress', 10, 'Dados do lançamento recebidos');
 
     if (!response.data.assets || response.data.assets.length === 0) {
       console.error('Nenhum ativo encontrado no lançamento.');
@@ -32,17 +32,22 @@ async function checkForUpdates() {
 
     const localJar = getLocalJarVersion();
     if (!localJar || localJar !== latestVersion) {
-      console.log(`Nova versão disponível: ${latestVersion}. Baixando...`);
-      await downloadFile(downloadUrl, `${jarFileNamePrefix}${latestVersion}${jarFileExtension}`);
+      win.webContents.send('update-progress', 30, 'Baixando nova versão...');
+      await downloadFile(downloadUrl, `${jarFileNamePrefix}${latestVersion}${jarFileExtension}`, win);
     } else {
-      console.log('Você já tem a versão mais recente.');
+      win.webContents.send('update-progress', 70, 'Você já tem a versão mais recente.');
+      await delay(1000);  // Adiciona um delay antes de mostrar a mensagem
+      win.webContents.send('update-progress', 100, 'Abrindo o cliente...');
+      await delay(2000);  // Delay antes de abrir o cliente
     }
-    executeJar(`${jarFileNamePrefix}${latestVersion}${jarFileExtension}`);
+    executeJar(`${jarFileNamePrefix}${latestVersion}${jarFileExtension}`, win);
   } catch (error) {
     console.error('Erro ao verificar atualizações:', error);
     const localJar = getLocalJarPath();
     if (localJar) {
-      executeJar(localJar);
+      win.webContents.send('update-progress', 100, 'Abrindo o cliente...');
+      await delay(2000);  // Delay antes de abrir o cliente
+      executeJar(localJar, win);
     }
   }
 }
@@ -67,7 +72,7 @@ function getLocalJarPath() {
   return null;
 }
 
-async function downloadFile(url, filename) {
+async function downloadFile(url, filename, win) {
   if (!fs.existsSync(appDataPath)) {
     fs.mkdirSync(appDataPath, { recursive: true });
   }
@@ -81,15 +86,28 @@ async function downloadFile(url, filename) {
     responseType: 'stream',
   });
 
+  const totalLength = parseInt(response.headers['content-length'], 10);
+
   response.data.pipe(writer);
 
+  let downloadedLength = 0;
+
+  response.data.on('data', (chunk) => {
+    downloadedLength += chunk.length;
+    const progress = (downloadedLength / totalLength) * 100;
+    win.webContents.send('update-progress', Math.round(progress), 'Baixando nova versão...');
+  });
+
   return new Promise((resolve, reject) => {
-    writer.on('finish', resolve);
+    writer.on('finish', () => {
+      win.webContents.send('update-progress', 100, 'Download concluído.');
+      resolve();
+    });
     writer.on('error', reject);
   });
 }
 
-function executeJar(jarFile) {
+function executeJar(jarFile, win) {
   const filePath = path.join(appDataPath, jarFile);
   exec(`java -jar "${filePath}"`, (error, stdout, stderr) => {
     if (error) {
@@ -103,6 +121,10 @@ function executeJar(jarFile) {
     console.log(`Saída: ${stdout}`);
   });
   app.quit();
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 module.exports = { checkForUpdates };
