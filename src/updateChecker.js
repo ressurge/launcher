@@ -6,13 +6,13 @@ const { exec } = require('child_process');
 const { app } = require('electron');
 
 const appDataPath = path.join(os.homedir(), 'AppData', 'Local', 'RessurgeLauncher');
-const jarFileNamePrefix = 'Ressurge_v'; // Prefixo do nome do arquivo
-const jarFileExtension = '.ja.jar'; // Extensão do nome do arquivo
+const jarFileNamePrefix = 'Ressurge_v';
+const jarFileExtension = '.ja.jar';
 
 async function checkForUpdates(win) {
   try {
     const response = await axios.get('https://api.github.com/repos/ressurge/Loader/releases/latest');
-    const latestVersion = response.data.tag_name; // Supondo que a tag_name seja a versão do lançamento
+    const latestVersion = response.data.tag_name;
 
     win.webContents.send('update-progress', 10, 'Dados do lançamento recebidos');
 
@@ -36,9 +36,9 @@ async function checkForUpdates(win) {
       await downloadFile(downloadUrl, `${jarFileNamePrefix}${latestVersion}${jarFileExtension}`, win);
     } else {
       win.webContents.send('update-progress', 70, 'Você já tem a versão mais recente.');
-      await delay(1000);  // Adiciona um delay antes de mostrar a mensagem
+      await delay(1000);
       win.webContents.send('update-progress', 100, 'Abrindo o cliente...');
-      await delay(2000);  // Delay antes de abrir o cliente
+      await delay(2000);
     }
     executeJar(`${jarFileNamePrefix}${latestVersion}${jarFileExtension}`, win);
   } catch (error) {
@@ -46,7 +46,7 @@ async function checkForUpdates(win) {
     const localJar = getLocalJarPath();
     if (localJar) {
       win.webContents.send('update-progress', 100, 'Abrindo o cliente...');
-      await delay(2000);  // Delay antes de abrir o cliente
+      await delay(2000);
       executeJar(localJar, win);
     }
   }

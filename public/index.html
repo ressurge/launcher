@@ -17,6 +17,13 @@
       font-family: Arial, sans-serif;
       background-color: #151515; /* Cor de fundo */
     }
+    .window-container {
+      width: 100%;
+      height: 100%;
+      border-radius: 15px; /* Define o border-radius */
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Adiciona sombra para realçar o border-radius */
+    }
     .loading-container {
       display: flex;
       flex-direction: column;
@@ -48,12 +55,14 @@
   </style>
 </head>
 <body>
-  <div class="loading-container">
-    <img src="../src/assets/icon.png" alt="Logo" class="logo">
-    <div class="progress-bar">
-      <div class="progress-bar-inner" id="progress-bar-inner"></div>
+  <div class="window-container">
+    <div class="loading-container">
+      <img src="../src/assets/icon.png" alt="Logo" class="logo">
+      <div class="progress-bar">
+        <div class="progress-bar-inner" id="progress-bar-inner"></div>
+      </div>
+      <p id="status-text">Verificando atualizações...</p>
     </div>
-    <p id="status-text">Verificando atualizações...</p>
   </div>
 
   <script>

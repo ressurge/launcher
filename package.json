@@ -1,15 +1,36 @@
 {
   "name": "ressurge-launcher",
   "version": "1.0.0",
+  "description": "Ressurge Launcher",
   "main": "src/main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "author": "manoel <joaomanoel.ms.br@gmail.com>",
+  "build": {
+    "appId": "com.ressurge.launcher",
+    "productName": "Ressurge Launcher",
+    "files": [
+      "src/**/*",
+      "public/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "src/assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "devDependencies": {
-    "electron": "^13.1.7"
+    "electron": "^13.1.7",
+    "electron-builder": "^22.11.7"
   },
   "dependencies": {
     "axios": "^0.21.1"
   }
 }
-

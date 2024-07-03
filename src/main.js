@@ -7,6 +7,9 @@ function createWindow() {
     width: 300,
     height: 350,
     frame: false,
+    transparent: true, // Torna a janela transparente
+    resizable: false, // Opcional: desabilita redimensionamento para manter o border-radius
+    icon: path.join(__dirname, 'assets', 'icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
