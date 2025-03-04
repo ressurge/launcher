@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ressurge Launcher</title>
   <style>
+    /* Reset de margem e padding, para garantir que a página ocupe toda a tela */
     body, html {
       margin: 0;
       padding: 0;
@@ -13,44 +15,68 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-      font-family: Arial, sans-serif;
-      background-color: #151515; /* Cor de fundo */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e2a47, #434874); /* Gradiente suave de fundo */
     }
+
     .window-container {
-      width: 100%;
-      height: 100%;
-      border-radius: 15px; /* Define o border-radius */
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Adiciona sombra para realçar o border-radius */
-    }
-    .loading-container {
+      width: 450px;
+      height: 350px;
+      background-color: #111; /* Fundo escuro para a janela */
+      border-radius: 20px; /* Cantos arredondados */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Sombra mais suave */
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
+      flex-direction: column;
       padding: 20px;
     }
+
+    .loading-container {
+      text-align: center;
+      width: 100%;
+    }
+
     .logo {
-      width: 100px; /* Ajuste o tamanho conforme necessário */
+      width: 120px;
       height: auto;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2)); /* Efeito de sombra na logo */
     }
+
     .progress-bar {
-      width: 300px; /* Largura fixa de 300px */
-      height: 20px;
-      background: #000; /* Fundo preto */
+      width: 100%;
+      height: 18px;
+      background: #222; /* Fundo da barra de progresso */
+      border-radius: 10px;
+      margin: 10px 0;
       overflow: hidden;
-      margin-bottom: 10px;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombras internas para profundidade */
     }
+
     .progress-bar-inner {
       height: 100%;
       width: 0;
-      background: #FFD700; /* Barra amarela */
-      transition: width 0.5s;
+      background: #FFD700; /* Barra de progresso amarela */
+      border-radius: 10px;
+      transition: width 0.5s ease-in-out; /* Animação suave */
     }
+
     #status-text {
-      font-size: 14px;
+      font-size: 16px;
       color: #fff; /* Texto branco */
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
+    /* Animações adicionais para texto de status */
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    #status-text {
+      animation: fadeIn 1s ease-out;
     }
   </style>
 </head>
