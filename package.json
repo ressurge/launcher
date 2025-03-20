@@ -1,6 +1,12 @@
 {
   "name": "ressurge-launcher",
   "version": "1.0.0",
+  "protocols": {
+    "schemes": [
+      "ressurge"
+    ],
+    "privileged": true
+  },
   "description": "Ressurge Launcher",
   "main": "src/main.js",
   "scripts": {

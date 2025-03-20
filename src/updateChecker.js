@@ -5,13 +5,13 @@ const os = require('os');
 const { exec } = require('child_process');
 const { app } = require('electron');
 
-const appDataPath = path.join(os.homedir(), 'AppData', 'Local', 'RessurgeLauncher');
+const appDataPath = path.join(os.homedir(), 'AppData', 'Local', 'Ressurge');
 const jarFileNamePrefix = 'Ressurge_v';
 const jarFileExtension = '.jar';
 
 async function checkForUpdates(win) {
   try {
-    const response = await axios.get('https://api.github.com/repos/ressurge/Loader/releases/latest');
+    const response = await axios.get('https://api.github.com/repos/ressurge/client/releases/latest');
     const latestVersion = response.data.tag_name;
 
     if (!response.data.assets || response.data.assets.length === 0) {
@@ -29,7 +29,6 @@ async function checkForUpdates(win) {
     const downloadUrl = asset.browser_download_url;
 
     const localJar = getLocalJarVersion();
-    console.log(localJar, latestVersion)
     if (!localJar || localJar !== latestVersion) {
       // Show download progress only if a new version needs to be downloaded
       win.webContents.send('update-progress', 10, 'Downloading new version...');
